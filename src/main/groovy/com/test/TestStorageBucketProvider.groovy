@@ -193,7 +193,10 @@ class TestStorageBucketProvider implements StorageProvider, StorageProviderBucke
     Collection<StorageVolumeType> getVolumeTypes() {
         return [
             new StorageVolumeType(code:'testObject', displayName:'Test Object Storage', name:'Test Object Storage', description:'Test Object Storage', volumeType:'bucket', enabled:false, displayOrder:1, customLabel:true, customSize:true, defaultType:true, autoDelete:true, minStorage:ComputeUtility.ONE_GIGABYTE, maxStorage:(10L * ComputeUtility.ONE_TERABYTE), allowSearch:true, volumeCategory:'volume', optionTypes:[
-            	    new OptionType(code: 'test.volumeThing', name: 'Volume Thing', inputType: OptionType.InputType.TEXT, fieldName: 'config.volumeThing', fieldLabel: 'Volume Thing', fieldContext: 'domain', required: true, displayOrder: 1, editable: false, fieldCode:'Volume Thing')
+            	    new OptionType(code: 'test.volumeThing', name: 'Volume Thing', inputType: OptionType.InputType.TEXT, fieldName: 'config.volumeThing', fieldLabel: 'Volume Thing', fieldContext: 'domain', required: true, displayOrder: 1, editable: false, fieldCode:'Volume Thing'),
+            	    new OptionType(code: 'test.cloud', name: 'Cloudy', inputType: OptionType.InputType.MULTI_SELECT, fieldName:'blahblah', fieldLabel: 'Cloudy', fieldContext: 'config', required: true, displayOrder: 2, editable: false, fieldCode:'Cloudy', optionSource: 'clouds'),
+            	    new OptionType(code: 'test.group', name: 'Group', inputType: OptionType.InputType.MULTI_SELECT, fieldName:'group', fieldLabel: 'Group', fieldContext: 'config', required: true, displayOrder: 3, editable: false, fieldCode:'Group', optionSource: 'groups')
+            	
             	])
         ]
     }
@@ -270,6 +273,7 @@ class TestStorageBucketProvider implements StorageProvider, StorageProviderBucke
     }
 
     def createVolume(StorageServer storageServer, StorageVolume storageVolume, Map opts){
+    	println "THE OPTS ARE: ${opts}"
     	return [success: true]
     }
 
