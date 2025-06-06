@@ -16,6 +16,7 @@ import com.morpheusdata.response.ServiceResponse
 import com.morpheusdata.core.util.ComputeUtility
 import groovy.util.logging.Slf4j
 import groovy.json.JsonOutput
+import com.test.datasets.TestStorageBucketDatasetProvider
 
 /**
  * TestStorageBucketProvider is a storage bucket provider for Morpheus.
@@ -194,13 +195,24 @@ class TestStorageBucketProvider implements StorageProvider, StorageProviderBucke
     Collection<StorageVolumeType> getVolumeTypes() {
         return [
             new StorageVolumeType(code:'testObject', displayName:'Test Object Storage', name:'Test Object Storage', description:'Test Object Storage', volumeType:'bucket', enabled:false, displayOrder:1, customLabel:true, customSize:true, defaultType:true, autoDelete:true, deletable:true, resizable:true, minStorage:ComputeUtility.ONE_GIGABYTE, maxStorage:(10L * ComputeUtility.ONE_TERABYTE), allowSearch:true, volumeCategory:'volume', optionTypes:[
-            	    new OptionType(code: 'test.volumeThing', name: 'Volume Thing', inputType: OptionType.InputType.TEXT, fieldName: 'config.volumeThing', fieldLabel: 'Volume Thing', fieldContext: 'domain', required: true, displayOrder: 1, editable: false, fieldCode:'Volume Thing'),
-            	    new OptionType(code: 'test.cloud', name: 'Cloudy', inputType: OptionType.InputType.MULTI_SELECT, fieldName:'blahblah', fieldLabel: 'Cloudy', fieldContext: 'config', required: true, displayOrder: 2, editable: false, fieldCode:'Cloudy', optionSource: 'clouds'),
-            	    new OptionType(code: 'test.group', name: 'Group', inputType: OptionType.InputType.MULTI_SELECT, fieldName:'group', fieldLabel: 'Group', fieldContext: 'config', required: true, displayOrder: 3, editable: false, fieldCode:'Group', optionSource: 'groups'),
+            	    new OptionType(code: 'test-volumeThing', name: 'Volume Thing', inputType: OptionType.InputType.TEXT, fieldName: 'config.volumeThing', fieldLabel: 'Volume Thing', fieldContext: 'domain', required: true, displayOrder: 1, editable: false, fieldCode:'Volume Thing'),
+            	    new OptionType(code: 'test-cloud', name: 'Cloudy', inputType: OptionType.InputType.MULTI_SELECT, fieldName:'blahblah', fieldLabel: 'Cloudy', fieldContext: 'config', required: true, displayOrder: 2, editable: false, fieldCode:'Cloudy', optionSource: 'clouds'),
+            	    new OptionType(code: 'test-group', name: 'Group', inputType: OptionType.InputType.MULTI_SELECT, fieldName:'group', fieldLabel: 'Group', fieldContext: 'config', required: true, displayOrder: 3, editable: false, fieldCode:'Group', optionSource: 'groups'),
             	    // Resizable OptionTypes
-            	    new OptionType(code: 'test.resizablething', name: 'Only Resize', inputType: OptionType.InputType.MULTI_SELECT, fieldName: 'yadaYada', fieldLabel: 'Yada', fieldContext: 'config', required: true, displayOrder: 2, editable: true, fieldCode: 'Yada', optionSource: 'clouds', config: JsonOutput.toJson(resizable:true).toString())
+					new OptionType(
+						name: 'Test Sample Source',
+						code: 'test-sample-source',
+						displayOrder: 0,
+						fieldContext: 'config',
+						fieldName: 'testSampleSource',
+						fieldCode: 'Test Sample Source',
+						inputType: OptionType.InputType.MULTI_SELECT,
+						config: JsonOutput.toJson(resizable:true).toString(),
+						optionSourceType: TestStorageBucketDatasetProvider.providerNamespace,
+						optionSource: TestStorageBucketDatasetProvider.providerKey,
+					)
 
-            	])
+			])
         ]
     }
 
@@ -286,9 +298,13 @@ class TestStorageBucketProvider implements StorageProvider, StorageProviderBucke
     }
 
     ServiceResponse<StorageVolume> resizeVolume(StorageServer storageServer, StorageVolume storageVolume, Map opts){
-    	println "${"\u001B[33m"}Im resizing storageServer: ${storageServer}  storageVolume: ${storageVolume}, opts: ${opts}${"\u001B[0m"}"
+    	println "${"\u001B[33m"}opts: ${opts.opts.config.testSampleSource}${"\u001B[0m"}"
 
     	storageVolume.maxStorage = opts.maxStorage.toLong()
+
+		// modify the config map to set an array of values
+		storageVolume.setConfigProperty('testSampleSource', opts.opts.config.testSampleSource)
+
 
 		println "${"\u001B[33m"}The result: ${storageVolume} ${"\u001B[0m"}"
     	return ServiceResponse.create([success: true, data: [storageVolume: storageVolume]])

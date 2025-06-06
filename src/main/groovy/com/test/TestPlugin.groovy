@@ -16,6 +16,7 @@
 package com.test
 
 import com.morpheusdata.core.Plugin
+import com.test.datasets.TestStorageBucketDatasetProvider
 
 class TestPlugin extends Plugin {
 
@@ -28,7 +29,7 @@ class TestPlugin extends Plugin {
     void initialize() {
         this.setName("Test")
         this.registerProvider(new TestStorageBucketProvider(this,this.morpheus))
-        
+        this.registerProvider(new TestStorageBucketDatasetProvider(this, this.morpheus))
 		
 		
     }
