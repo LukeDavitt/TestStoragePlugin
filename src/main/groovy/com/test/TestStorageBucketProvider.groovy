@@ -303,7 +303,13 @@ class TestStorageBucketProvider implements StorageProvider, StorageProviderBucke
     	storageVolume.maxStorage = opts.maxStorage.toLong()
 
 		// modify the config map to set an array of values
-		storageVolume.setConfigProperty('testSampleSource', opts.opts.config.testSampleSource)
+		if(opts.opts.config.testSampleSource instanceof String){
+			storageVolume.setConfigProperty('testSampleSource', [opts.opts.config.testSampleSource])
+		}
+		if(opts.opts.config.testSampleSource instanceof List){
+			storageVolume.setConfigProperty('testSampleSource', opts.opts.config.testSampleSource)
+		}
+
 
 
 		println "${"\u001B[33m"}The result: ${storageVolume} ${"\u001B[0m"}"
