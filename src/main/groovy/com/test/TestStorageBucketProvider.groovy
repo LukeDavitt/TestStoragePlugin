@@ -194,25 +194,26 @@ class TestStorageBucketProvider implements StorageProvider, StorageProviderBucke
      */
     Collection<StorageVolumeType> getVolumeTypes() {
         return [
-            new StorageVolumeType(code:'testObject', displayName:'Test Object Storage', name:'Test Object Storage', description:'Test Object Storage', volumeType:'bucket', enabled:false, displayOrder:1, customLabel:true, customSize:true, defaultType:true, autoDelete:true, deletable:true, resizable:true, minStorage:ComputeUtility.ONE_GIGABYTE, maxStorage:(10L * ComputeUtility.ONE_TERABYTE), allowSearch:true, volumeCategory:'volume', optionTypes:[
-            	    new OptionType(code: 'test-volumeThing', name: 'Volume Thing', inputType: OptionType.InputType.TEXT, fieldName: 'config.volumeThing', fieldLabel: 'Volume Thing', fieldContext: 'domain', required: true, displayOrder: 1, editable: false, fieldCode:'Volume Thing'),
-            	    new OptionType(code: 'test-cloud', name: 'Cloudy', inputType: OptionType.InputType.MULTI_SELECT, fieldName:'blahblah', fieldLabel: 'Cloudy', fieldContext: 'config', required: true, displayOrder: 2, editable: false, fieldCode:'Cloudy', optionSource: 'clouds'),
-            	    new OptionType(code: 'test-group', name: 'Group', inputType: OptionType.InputType.MULTI_SELECT, fieldName:'group', fieldLabel: 'Group', fieldContext: 'config', required: true, displayOrder: 3, editable: false, fieldCode:'Group', optionSource: 'groups'),
-            	    // Resizable OptionTypes
-					new OptionType(
-						name: 'Test Sample Source',
-						code: 'test-sample-source',
-						displayOrder: 0,
-						fieldContext: 'config',
-						fieldName: 'testSampleSource',
-						fieldCode: 'Test Sample Source',
-						inputType: OptionType.InputType.MULTI_SELECT,
-						config: JsonOutput.toJson(resizable:true).toString(),
-						optionSourceType: TestStorageBucketDatasetProvider.providerNamespace,
-						optionSource: TestStorageBucketDatasetProvider.providerKey,
-					)
+            // new StorageVolumeType(code:'testObject', displayName:'Test Object Storage', name:'Test Object Storage', description:'Test Object Storage', volumeType:'bucket', enabled:false, displayOrder:1, customLabel:true, customSize:true, defaultType:true, autoDelete:true, deletable:true, resizable:true, minStorage:ComputeUtility.ONE_GIGABYTE, maxStorage:(10L * ComputeUtility.ONE_TERABYTE), allowSearch:true, volumeCategory:'volume', optionTypes:[
+            // 	    new OptionType(code: 'test-volumeThing', name: 'Volume Thing', inputType: OptionType.InputType.TEXT, fieldName: 'config.volumeThing', fieldLabel: 'Volume Thing', fieldContext: 'domain', required: true, displayOrder: 1, editable: false, fieldCode:'Volume Thing'),
+            // 	    new OptionType(code: 'test-cloud', name: 'Cloudy', inputType: OptionType.InputType.MULTI_SELECT, fieldName:'blahblah', fieldLabel: 'Cloudy', fieldContext: 'config', required: true, displayOrder: 2, editable: false, fieldCode:'Cloudy', optionSource: 'clouds'),
+            // 	    new OptionType(code: 'test-group', name: 'Group', inputType: OptionType.InputType.MULTI_SELECT, fieldName:'group', fieldLabel: 'Group', fieldContext: 'config', required: true, displayOrder: 3, editable: false, fieldCode:'Group', optionSource: 'groups'),
+            // 	    // Resizable OptionTypes
+			// 		new OptionType(
+			// 			name: 'Test Sample Source',
+			// 			code: 'test-sample-source',
+			// 			displayOrder: 0,
+			// 			fieldContext: 'config',
+			// 			fieldName: 'testSampleSource',
+			// 			fieldCode: 'Test Sample Source',
+			// 			inputType: OptionType.InputType.MULTI_SELECT,
+			// 			config: JsonOutput.toJson(resizable:true).toString(),
+			// 			optionSourceType: TestStorageBucketDatasetProvider.providerNamespace,
+			// 			optionSource: TestStorageBucketDatasetProvider.providerKey,
+			// 		)
 
-			])
+			// ])
+			new StorageVolumeType(code:'testObject', displayName:'Test Object Storage', name:'Test Object Storage', description:'Test Object Storage', volumeType:'bucket', enabled:false, displayOrder:1, customLabel:true, customSize:true, defaultType:true, autoDelete:true, deletable:true, resizable:true, minStorage:ComputeUtility.ONE_GIGABYTE, maxStorage:(10L * ComputeUtility.ONE_TERABYTE), allowSearch:true, volumeCategory:'volume', optionTypes:[])
         ]
     }
 
@@ -288,7 +289,10 @@ class TestStorageBucketProvider implements StorageProvider, StorageProviderBucke
     }
 
     def createVolume(StorageServer storageServer, StorageVolume storageVolume, Map opts){
-    	println "THE OPTS ARE: ${opts}"
+
+    	println "${"\u001B[33m"} the opts are: ${opts}  ${"\u001B[0m"}"
+    	storageVolume = morpheusContext.services.storageVolume.create(storageVolume)
+    	println "${"\u001B[33m"} the storageVolume ID IS: ${storageVolume.id}  ${"\u001B[0m"}"
     	return [success: true]
     }
 
